@@ -1,0 +1,80 @@
+---
+title: "HW1"
+author: "Yicheng Chen"
+date: "February 1, 2018"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Used Car price
+
+This is Yicheng's first assignment. The goal is to find which factors can influence the prices of used cars. Regarding this I have initial intuitions as followed:
+
+1. A car with high milages would be cheaper than a low one, given other conditions are identical.
+
+2. A car with good brand would be more expensive than a normal brand.
+
+Data resource: http://WWw2.amstat.org/publications/jse/jse_data_archive.htm
+
+Name: Car Data (810 observations, 12 variables)
+
+
+```{r, include = FALSE, echo = FALSE}
+library(ggplot2); theme_set(theme_bw())
+library(ggthemes)
+```
+
+### Graph 1: Mileage and Price
+
+The first graph shows the relation between prices and mileages.
+
+```{r Data1,cacge = FALSE, echo=FALSE}
+Data1 <- read.csv("kuiper.csv")
+colnames(Data1)[1]<- "Price"
+gp1 <- ggplot(data = Data1, aes(x = Mileage,y = Price,group = Make))
+gp1 <- gp1 + geom_point(aes(color = Make))
+gp1 <- gp1 + geom_smooth()
+gp1 <- gp1 + coord_cartesian(xlim = c(0,40000))
+gp1 <- gp1 + ggtitle("Prices Vs Mileages Vs Brand")
+print(gp1)
+```
+
+The relationship between price and mileage is not very clear because the slope is not significant but still negative.  Furthermore, it seems that my second hypothesis is more accurate. For example, a used Cadillac is more expensive than a used SAAB or Pontiac, no matter what the mileage is. However, there are some outliers as some used Chevys are more expensive than other brands. It is possible that they are high-performance versions. Therefore, the second graph will represents a boxplot in term of type and price.
+
+### Graph 2: Types and Prices
+
+```{r, echo=FALSE}
+g2 <- ggplot(Data1, aes(x = Type, y = Price)) + geom_boxplot()
+g2 <- g2 + ggtitle("Price Vs Type")
+print(g2)
+```
+\newline
+
+Overally, the mean values of difference types are significantly different. For example, the average price of Convertibles is much higher than the others, and the price range of convertibles is fairly large. I claim that the sport car are normally more expensive.
+
+On the other hand, the average price of coupes is not high, but there are some outliers whose prices are closer to the mean value of Convertibles. The same situation occurs with Sedans.
+The cars can either have a good brand, or have a normal brand with improved performances
+
+
+### Gtaph 3: Brand, type and Prices
+```{r, echo=FALSE}
+g3 <- ggplot(Data1,alpha = 0.2,aes(x = Type, y = Price, color = Make, shape = Make))+
+  geom_point(position = 'jitter')
+print(g3)
+```
+
+Now we should combine all results from first two parts into graph 3 where it shows the production lines for each brands. Only 3 brands produce convertibles; Cadillacs, Chevrolets and SAABs. It explains why some chevys and SAABs are very expensive. Besides, Cadillacs also makes luxury sedans and it proves our point "some sedans are made by good brands"
+
+
+## Conclusion
+
+Those graphs briefly describe which factor can affect the prices of used cars. Given a budget, we should first care about the ideal type, then brand, and finally the mileage.
+
+
+
+

@@ -1,0 +1,29 @@
+---
+title: "HW2"
+author: "Yicheng Chen"
+date: "February 5, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Homework 2
+
+This graphs wants to presents why vaccine benefit people more than harm. As we can see from the graph, before the vaccine was licensed, the number of reported cases were all fairly large. However, once the vaccine was licensed, the number of reported cases gradually decreases, meaning the vaccine has a positive effect to people. Furthermore, we must make sure that the vaccine licensed must be renewed occasionally. For example, if we take Pertussis; after the vaccine was licensed, the number of reported cases gradually fell. However once year 2000, the number of reported cases increased again. If we take for example Hepatitis A, after the vaccine got licensed again on year 2005, the number of reported cases got reduced even further. Therefore, we can say for certain that once the vaccine was licensed, the number of reported cases reduced.
+
+
+```{r cars}
+summary(cars)
+```
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r pressure, echo=FALSE}
+plot(pressure)
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
