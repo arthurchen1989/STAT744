@@ -6,24 +6,55 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
+
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
 ## Homework 2
 
-This graphs wants to presents why vaccine benefit people more than harm. As we can see from the graph, before the vaccine was licensed, the number of reported cases were all fairly large. However, once the vaccine was licensed, the number of reported cases gradually decreases, meaning the vaccine has a positive effect to people. Furthermore, we must make sure that the vaccine licensed must be renewed occasionally. For example, if we take Pertussis; after the vaccine was licensed, the number of reported cases gradually fell. However once year 2000, the number of reported cases increased again. If we take for example Hepatitis A, after the vaccine got licensed again on year 2005, the number of reported cases got reduced even further. Therefore, we can say for certain that once the vaccine was licensed, the number of reported cases reduced.
+This graphs wants to presents why vaccines lower the incidence of disease. As we can see from the graph, before the vaccine was licensed, the number of reported cases were all fairly large. However, once the vaccine was licensed, the number of reported cases gradually decreases, meaning the vaccine has a positive effect to people. Furthermore, we must make sure that the vaccine licensed must be renewed occasionally. For example, if we take Pertussis; after the vaccine was licensed, the number of reported cases gradually fell. However once year 2000, the number of reported cases increased again. If we take for example Hepatitis A, after the vaccine got licensed again on year 2005, the number of reported cases got reduced even further. Therefore, we can say for certain that once the vaccine was licensed, the number of reported cases reduced.
 
 
-```{r cars}
-summary(cars)
+```{r,warning = FALSE,message = FALSE, echo = FALSE}
+library(dplyr)
+library(ggplot2);theme_set(theme_bw())
+library(ggthemes)
+library(directlabels)
+theme_update(panel.spacing=grid::unit(0,"lines"))
+library(directlabels)
+library(cowplot)
+library(Hmisc)
+data <- read.csv("https://bbolker.github.io/stat744/data/vaccine_data_online.csv")
+data$Vaccine_Event <- data$vaccine!='FALSE'
 ```
 
-## Including Plots
+## Graph 1: Replication
 
-You can also embed plots, for example:
+The first graph is a replication of JiaYou's work with some tiny modifications. As we can see from the graph, almost all the diseases overtime has less cases of incidence. Therefore, we can say that with the introduction of vaccines, it lowers the cases of incidence for several diseases. However for the vaccines to be actually effective, their needs to be a true vaccine event. If we take a look at all the cases, once their was a true vaccine event, the number of reported cases got a lot smaller overtime. But if we take a look at Pertussis, we can see that starting in the year 2000, the number of cases increased. The only difference between this disease and the rest is that the most recent true vaccine event occurred at year 1950, where as for all the other diseases, the most recent true vaccine event occurred around year 1990 (on average). Therefore, we can say that as long as their is a true vaccine event that occurs every 50 years, vaccines will lower the incidence of disease. 
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r, data, echo=FALSE}
+my_colour <- c("blue","red")
+g1 <- ggplot(data = data, aes(x = disease, y = year))
+g1 <- g1 + geom_point(aes(size = cases, color = Vaccine_Event ),alpha = 0.2) 
+g1 <- g1 + scale_size(range = c(1,25))
+g1 <- g1 + scale_color_manual(values = my_colour)
+g1 <- g1 + scale_y_continuous(trans = 'reverse')
+g1 <- g1 + geom_point(data = data[data$vaccine!='FALSE',], colour = 'black')
+print(g1)
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+## Graph 2: Log(cases) Vs Year
+
+The reason why the log graphs is better then the replication graphs is that the number of reported cases for each disease and year it a lot more clear. For the replication graph, the number of reported cases is represented by the size of the circle; something that we cannot accurately measure. So if we need an accurate report of how many cases of incidence their are for a certain disease, it will be very hard to accurately report the correct number of cases for any year. However if we take a look at the log graph, we can easily tell how many cases their are for each disease every year. We can also easily tell how effective the vaccine is through the slopes. The more steep the slope is, the more effective  the vaccine is for that particular disease. 
+
+
+```{r, echo=FALSE}
+g0 <- ggplot(data = data, aes(x = year, y = log(cases),colour = disease)) +geom_path() +
+      scale_x_continuous(breaks = seq(1945,2015,30))+
+      facet_grid(.~disease,scales = "free") + 
+      geom_point(data = data[data$vaccine!='FALSE',], shape=1, size=2, stroke=1.5)+
+      ggtitle("Log_Cases Vs Year")
+print(g0)
+```
+
+
