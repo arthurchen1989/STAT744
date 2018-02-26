@@ -1,0 +1,65 @@
+---
+title: "HW3"
+author: "YichengChen"
+date: "February 24, 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## The Fuel efficiency innovation --- Data visisulization in Fuel Economy
+
+This report uses a data visualization method to analyze the automobile fuel efficiency over time, and how each manufacturer improves its product in the past 40 years. The data comes from the office of Energy efficient and renewable energy. It is slightly complicated since it has 39542 rows and 84 columns. 
+
+** Some codes are referred by the book: Pratical Data Science Cookbook.
+
+We are willing to see if there is an overall trend of how Fuel efficient changed in the recent years. The first graphs represents the average MPG in each year. Since hybrid cars can highly affect the results, we created two separate groups; gas cars and others.
+
+## MPG trend 
+
+```{r graph1, echo= FALSE}
+library(ggplot2)
+library(plyr)
+library(magrittr)
+library(dplyr)
+vehicles<-read.csv("vehicles.csv")
+
+vehicles$gas_ <- ifelse(vehicles$fuelType1 %in% c('Regular Gasoline','Premiun Gasoline',
+                                         'Midgrade Gasoline') & vehicles$fuelType2 =="" &
+                          vehicles$atvType!='Hybrid', 'Gas' ,'Other')
+mpgByYr<-ddply(vehicles, .(year,gas_),summarise,
+               avgMPG=mean(comb08),avgHghy=mean(highway08),avgCity=mean(city08))
+
+
+g1 <- ggplot(mpgByYr, aes(year, avgMPG, colour = gas_)) + geom_point() + geom_smooth() + xlab('Year') + ylab('Average MPG') + ggtitle('Trend of MPG')
+
+print(g1)
+
+
+```
+
+This graphs shows that something occurred around the years 2005-2007 and the reason is obvious, after the year 2005, the slope sharply increases. However, we do now know the exact reason of why it increased. So far, their can only be two explanations. Either there was a technological improvement, or the manufactures simply reduced the production of high emission cars. A good suggestion is to see the different power systems. In my particular case, I picked all 4 cylinder gas cars to see the difference between all the systems.
+
+
+
+```{r power system, echo=FALSE}
+gascar <- subset(vehicles, gas_ == 'Gas')
+gas4 <- subset(gascar, cylinders=="4")
+ggplot(gas4,aes(factor(year),comb08))+geom_boxplot()+facet_wrap(~drive,ncol=2)+theme(axis.text.x=element_text(angle = 45))+labs(x="Year",y="MPG")+ ggtitle('4 cylinders power system')
+```
+
+As we can see from the graph, there is a large technological improve on Front-Wheel Drive car. (Explain why/how there is a large improvement from the graphs). So now the question is, which manufactures lead the market?
+
+```{r manufactor, echo = FALSE}
+gas4fwd <- subset(gas4, drive == 'Front-Wheel Drive')
+carMake <- dlply(gas4fwd, ~ year, function(x)unique(x$make))
+carMake <- carMake[1:34]
+CommomMakers <- Reduce(intersect, carMake)
+carsFromCommomMakers <- subset(gas4fwd, make %in% CommomMakers)
+averMPG_comm <- ddply(carsFromCommomMakers, ~ year + make, summarise, averMPG = mean(comb08))
+ggplot(averMPG_comm, aes(year, averMPG)) + geom_line() + facet_wrap(~make,nrow = 3)+ ggtitle('Manufactors')
+```
+
+As we can see from the graphs, Honda is clearly leading. In fact, their are only 5 manufactures that actually have a good MPG. Those are: Honda, Nissan, Toyota, Mazda, and Chevrolet. All the other manufactures have relatively poor MPG, so the main reason why we see a large technological improvement on Front-Wheel Drive cars are because of those 5 manufacturers. Another reason why we know it is a technological improvement is because the MPG increases as time increases. As we know, technology improves over time and for those 5 manufactures, we see that they all have a sharp increase in MPG around year 2010. Therefore around year 2010, the car manufactures must have created some new technology that will help cars travel further with less gas. ```
