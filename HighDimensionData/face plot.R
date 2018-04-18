@@ -1,3 +1,5 @@
+## BMB please avoid file names with spaces in them!
+
 library(aplpack)
 crime <- read.csv("http://datasets.flowingdata.com/crimeRatesByState-formatted.csv")
 crime[1:6,]

@@ -1,3 +1,8 @@
+## BMB: did you write all this code yourself? is there a web source
+##  that you used for ideas or inspiration? Always cite your sources!
+##
+## there are no comments here
+
 # data analysis and wrangling
 import pandas as pd
 import numpy as np
@@ -8,6 +13,8 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 
 # machine learning
+## BMB: do you use any of this here?
+##  best to leave modules out if you don't use them ...
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC, LinearSVC
 from sklearn.ensemble import RandomForestClassifier
@@ -123,6 +130,7 @@ train_df['AgeBand'] = pd.cut(train_df['Age'],5)
 train_df[['AgeBand', 'Survived']].groupby(['AgeBand'],
             as_index=False).mean().sort_values(by='AgeBand', ascending=True)
 
+## BMB: is there an equivalent of R's cut() function??
 for dataset in combine:
     dataset.loc[ dataset['Age'] <= 16, 'Age'] = 0
     dataset.loc[(dataset['Age'] > 16) & (dataset['Age'] <= 32), 'Age'] = 1

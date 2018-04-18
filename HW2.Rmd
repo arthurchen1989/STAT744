@@ -58,3 +58,9 @@ print(g0)
 ```
 
 
+**BMB**: overall this looks quite good. The only really issue (this
+is cosmetic, not conceptual, but much of data viz is about getting the
+cosmetic details as well as the conceptual structure right) is that
+many of the labels are ugly/overlapping. Also: diseases are presented
+alphabetically - is there a more informative ordering?  Is default
+colour scheme OK or could you do something better?
